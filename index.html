@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S&S Hotel - Staff Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #C9A962;
+            --gold-light: #E8D5A3;
+            --gold-dark: #A68B4B;
+            --navy: #0A1628;
+            --navy-light: #152238;
+            --navy-lighter: #1E3A5F;
+            --cream: #FBF9F3;
+            --white: #FFFFFF;
+            --text-muted: #8B9AAF;
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--navy);
+            color: var(--white);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+            background-image: 
+                radial-gradient(circle at 25% 25%, var(--gold) 2px, transparent 2px),
+                radial-gradient(circle at 75% 75%, var(--gold) 1px, transparent 1px);
+            background-size: 60px 60px, 40px 40px;
+        }
+
+        .gradient-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .orb-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(201, 169, 98, 0.15) 0%, transparent 70%);
+            top: -200px;
+            right: -200px;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(30, 58, 95, 0.4) 0%, transparent 70%);
+            bottom: -100px;
+            left: -100px;
+            animation: float 15s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.05); }
+            66% { transform: translate(-20px, 20px) scale(0.95); }
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(20px);
+            background: rgba(10, 22, 40, 0.8);
+            border-bottom: 1px solid rgba(201, 169, 98, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--navy);
+            box-shadow: 0 4px 20px rgba(201, 169, 98, 0.3);
+        }
+
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        .logo-text span {
+            color: var(--gold);
+        }
+
+        .header-badge {
+            background: rgba(201, 169, 98, 0.1);
+            border: 1px solid rgba(201, 169, 98, 0.3);
+            padding: 0.5rem 1.25rem;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            color: var(--gold-light);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-eyebrow {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.2s;
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 8vw, 5.5rem);
+            font-weight: 600;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.4s;
+        }
+
+        .hero-title .highlight {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin-bottom: 3rem;
+            line-height: 1.7;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.6s;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 1s;
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 60px;
+            background: linear-gradient(to bottom, var(--gold), transparent);
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.3; height: 60px; }
+            50% { opacity: 1; height: 80px; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Cards Section */
+        .cards-section {
+            padding: 4rem 2rem 8rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .action-card {
+            background: linear-gradient(145deg, rgba(21, 34, 56, 0.8) 0%, rgba(10, 22, 40, 0.9) 100%);
+            border: 1px solid rgba(201, 169, 98, 0.15);
+            border-radius: 24px;
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+        }
+
+        .action-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .action-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(201, 169, 98, 0.4);
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                0 0 80px -20px rgba(201, 169, 98, 0.2);
+        }
+
+        .action-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-glow {
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(201, 169, 98, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        .action-card:hover .card-glow {
+            opacity: 1;
+        }
+
+        .card-icon-wrapper {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.75rem;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .action-card:hover .card-icon-wrapper {
+            transform: scale(1.1);
+        }
+
+        .card-icon-wrapper.checkin {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(34, 197, 94, 0.05) 100%);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .card-icon-wrapper.checkout {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(239, 68, 68, 0.05) 100%);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .card-icon-wrapper.expense {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(245, 158, 11, 0.05) 100%);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            padding: 0.4rem 1rem;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge-checkin {
+            background: rgba(34, 197, 94, 0.15);
+            color: #4ADE80;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .badge-checkout {
+            background: rgba(239, 68, 68, 0.15);
+            color: #F87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .badge-expense {
+            background: rgba(245, 158, 11, 0.15);
+            color: #FBBF24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--white);
+        }
+
+        .card-description {
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .card-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-tag {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .feature-tag svg {
+            width: 14px;
+            height: 14px;
+            opacity: 0.7;
+        }
+
+        .card-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--gold);
+            font-weight: 600;
+            font-size: 1rem;
+            transition: gap 0.3s ease;
+        }
+
+        .action-card:hover .card-cta {
+            gap: 1.25rem;
+        }
+
+        .cta-arrow {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(201, 169, 98, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .action-card:hover .cta-arrow {
+            background: var(--gold);
+            color: var(--navy);
+        }
+
+        /* Quick Stats */
+        .stats-bar {
+            max-width: 1400px;
+            margin: 0 auto 4rem;
+            padding: 0 2rem;
+        }
+
+        .stats-container {
+            background: linear-gradient(145deg, rgba(21, 34, 56, 0.6) 0%, rgba(10, 22, 40, 0.8) 100%);
+            border: 1px solid rgba(201, 169, 98, 0.1);
+            border-radius: 20px;
+            padding: 2rem 3rem;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            position: relative;
+        }
+
+        .stat-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: -1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1px;
+            height: 40px;
+            background: rgba(201, 169, 98, 0.2);
+        }
+
+        .stat-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--gold);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            border-top: 1px solid rgba(201, 169, 98, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo span {
+            color: var(--gold);
+        }
+
+        .footer-text {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .footer-links {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--gold);
+        }
+
+        /* Time Display */
+        .time-display {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(10, 22, 40, 0.9);
+            border: 1px solid rgba(201, 169, 98, 0.2);
+            padding: 1rem 1.5rem;
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .time-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--gold);
+        }
+
+        .time-date {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stat-item:nth-child(2)::after {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem 1.5rem;
+            }
+
+            .header-badge {
+                display: none;
+            }
+
+            .hero {
+                padding: 7rem 1.5rem 3rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+                padding: 0 0.5rem;
+            }
+
+            .action-card {
+                padding: 2rem;
+            }
+
+            .stats-container {
+                grid-template-columns: 1fr 1fr;
+                padding: 1.5rem;
+                gap: 1.5rem;
+            }
+
+            .stat-item::after {
+                display: none !important;
+            }
+
+            .stat-value {
+                font-size: 2rem;
+            }
+
+            .time-display {
+                bottom: 1rem;
+                right: 1rem;
+                padding: 0.75rem 1rem;
+            }
+
+            .scroll-indicator {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo-text {
+                font-size: 1.2rem;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .card-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Effects -->
+    <div class="bg-pattern"></div>
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon">S&S</div>
+            <div class="logo-text"><span>S&S</span> Hotel</div>
+        </div>
+        <div class="header-badge">
+            <div class="pulse-dot"></div>
+            Staff Portal Active
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-eyebrow">Staff Operations Portal</div>
+        <h1 class="hero-title">
+            Manage Your<br>
+            <span class="highlight">Hotel Operations</span>
+        </h1>
+        <p class="hero-subtitle">
+            Streamlined check-ins, checkouts, and expense tracking. 
+            Everything you need to run daily operations efficiently.
+        </p>
+        <div class="scroll-indicator">
+            <span>Scroll to explore</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- Quick Stats -->
+    <div class="stats-bar">
+        <div class="stats-container">
+            <div class="stat-item">
+                <div class="stat-value" id="stat-rooms">19</div>
+                <div class="stat-label">Total Rooms</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="stat-staff">4</div>
+                <div class="stat-label">Staff Members</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">24/7</div>
+                <div class="stat-label">Operations</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">100%</div>
+                <div class="stat-label">Digital Records</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Cards -->
+    <section class="cards-section">
+        <div class="section-header">
+            <h2 class="section-title">Quick Actions</h2>
+            <p class="section-subtitle">Select an operation to get started</p>
+        </div>
+
+        <div class="cards-grid">
+            <!-- Check-in Card -->
+            <a href="https://n8n.aifyy.com/form/guest-checkin-form-v2" class="action-card" target="_blank">
+                <div class="card-glow"></div>
+                <span class="card-badge badge-checkin">Arrival</span>
+                <div class="card-icon-wrapper checkin">
+                    <span class="card-icon">🔑</span>
+                </div>
+                <h3 class="card-title">Guest Check-in</h3>
+                <p class="card-description">
+                    Register new guest arrivals, assign rooms, collect advance payments, 
+                    and capture ID verification details.
+                </p>
+                <div class="card-features">
+                    <span class="feature-tag">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                        ID Verification
+                    </span>
+                    <span class="feature-tag">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                            <line x1="1" y1="10" x2="23" y2="10"/>
+                        </svg>
+                        Split Payment
+                    </span>
+                    <span class="feature-tag">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                        </svg>
+                        Auto Notify
+                    </span>
+                </div>
+                <div class="card-cta">
+                    Start Check-in
+                    <span class="cta-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- Checkout Card -->
+            <a href="https://n8n.aifyy.com/form/guest-checkout-form-v2" class="action-card" target="_blank">
+                <div class="card-glow"></div>
+                <span class="card-badge badge-checkout">Departure</span>
+                <div class="card-icon-wrapper checkout">
+                    <span class="card-icon">🚪</span>
+                </div>
+                <h3 class="card-title">Guest Checkout</h3>
+                <p class="card-description">
+                    Process guest departures with complete billing, including room charges, 
+                    services, GST calculation, and final payment settlement.
+                </p>
+                <div class="card-features">
+                    <span class="feature-tag">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                        </svg>
+                        Auto GST
+                    </span>
+                    <span class="feature-tag">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="1" x2="12" y2="23"/>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                        Full Billing
+                    </span>
+                    <span class="feature-tag">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                        Feedback
+                    </span>
+                </div>
+                <div class="card-cta">
+                    Process Checkout
+                    <span class="cta-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- Expense Card -->
+            <a href="https://n8n.aifyy.com/form/ss-expense" class="action-card" target="_blank">
+                <div class="card-glow"></div>
+                <span class="card-badge badge-expense">Finance</span>
+                <div class="card-icon-wrapper expense">
+                    <span class="card-icon">📤</span>
+                </div>
+                <h3 class="card-title">Record Expense</h3>
+                <p class="card-description">
+                    Log all hotel expenses including kitchen supplies, utilities, staff payments, 
+                    maintenance, and vendor bills with approval workflows.
+                </p>
+                <div class="card-features">
+                    <span class="feature-tag">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        Categories
+                    </span>
+                    <span class="feature-tag">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                        Approvals
+                    </span>
+                    <span class="feature-tag">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                        Tracking
+                    </span>
+                </div>
+                <div class="card-cta">
+                    Add Expense
+                    <span class="cta-arrow">→</span>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-logo"><span>S&S</span> Hotel</div>
+        <p class="footer-text">Staff Operations Portal v2.0 • Powered by Intelligent Automation</p>
+        <div class="footer-links">
+            <a href="#">Help & Support</a>
+            <a href="#">Training Guide</a>
+            <a href="#">Contact Manager</a>
+        </div>
+    </footer>
+
+    <!-- Time Display -->
+    <div class="time-display">
+        <div class="time-value" id="current-time">--:--</div>
+        <div class="time-date" id="current-date">Loading...</div>
+    </div>
+
+    <script>
+        // Update time every second
+        function updateTime() {
+            const now = new Date();
+            const timeOptions = { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: true,
+                timeZone: 'Asia/Kolkata'
+            };
+            const dateOptions = { 
+                weekday: 'short', 
+                day: 'numeric', 
+                month: 'short',
+                timeZone: 'Asia/Kolkata'
+            };
+            
+            document.getElementById('current-time').textContent = 
+                now.toLocaleTimeString('en-IN', timeOptions);
+            document.getElementById('current-date').textContent = 
+                now.toLocaleDateString('en-IN', dateOptions);
+        }
+
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add entrance animations on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.action-card').forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = `all 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.15}s`;
+            observer.observe(card);
+        });
+
+        document.querySelectorAll('.stat-item').forEach((stat, index) => {
+            stat.style.opacity = '0';
+            stat.style.transform = 'translateY(20px)';
+            stat.style.transition = `all 0.5s ease ${index * 0.1}s`;
+            observer.observe(stat);
+        });
+    </script>
+</body>
+</html>
